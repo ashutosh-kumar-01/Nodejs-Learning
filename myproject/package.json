@@ -12,6 +12,7 @@
   "type": "commonjs",
   "dependencies": {
     "express": "^5.2.1",
-    "latest": "^0.2.0"
+    "latest": "^0.2.0",
+    "mongoose": "^9.3.2"
   }
 }
