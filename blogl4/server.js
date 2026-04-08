@@ -29,3 +29,7 @@ app.get('/', (req, res) => {
     res.send("Welcome to the BLOG APP");
 });
 
+// this is for testing purpose only, to check if the server is running
+app.get('/test', (req, res) => {
+    res.send("This is a test route");
+});
