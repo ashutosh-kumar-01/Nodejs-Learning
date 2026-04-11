@@ -5,7 +5,7 @@ require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-
+// connect to database
 require('./config/database').connect();
 
 // route import and mount

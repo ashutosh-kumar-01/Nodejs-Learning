@@ -26,7 +26,7 @@ exports.signup = async (req , res) => {
         }
 
         // create entry for user 
-        const user = new User({
+        const user = await User.create({
             name, email , password: hashedPassword, role
         })
         
