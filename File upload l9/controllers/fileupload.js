@@ -1,5 +1,5 @@
 const File = require('../models/file');
-const clodinary = require('cloudinary').v2;
+const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
 
 // localfileupload ka handler function create karna hai 
@@ -36,9 +36,13 @@ function isFileTypeSupported(type, supportedTypes) {
 
 
 // cloudinary file upload ka handler define yaha karna hai
-async function uploadFileToCloudinary(file, folder) {
+async function uploadFileToCloudinary(file, folder, quality) {
     const options = {folder};
-    return await clodinary.uploader.upload(file.tempFilePath, options);
+    if(quality) {
+        options.quality = quality;
+    }
+    options.resource_type = "auto";
+    return await cloudinary.uploader.upload(file.tempFilePath, options);
 }
 
 // image upload ka handler define yaha karna hai 
@@ -68,23 +72,25 @@ exports.imageUpload = async (req, res) =>{
         console.log(response);
 
         // db ke aandar entry save karni hia 
-        // const fileData = await File.create({
-        //     name,
-        //     imageUrl: response.secure_url,
-        //     tags,
-        //     email
-        // })
+        const fileData = await File.create({
+            name,
+            imageUrl: response.secure_url,
+            tags,
+            email
+        })
 
         res.json({
             success: true,
+            imageUrl: response.secure_url,
             message: "Image uploaded successfully",
         });
 
     } catch (error) {
-        console.log(error);
+        console.error("DEBUG ERROR: ", error);
         res.status(400).json({
             success: false,
-            message: "Something went wrong"
+            message: "Something went wrong",
+            error: error.message
         });
     }
 }
