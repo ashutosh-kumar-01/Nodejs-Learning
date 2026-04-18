@@ -94,3 +94,105 @@ exports.imageUpload = async (req, res) =>{
         });
     }
 }
+
+
+// video upload handler define yaha kar rahe hai 
+
+exports.videoUpload = async (req, res) => {
+    try {
+        //data fetch katna hai 
+        const { name, tags, email } = req.body;
+        console.log(name, tags, email);
+        
+        const file = req.files.videoFile;
+
+        // validation check karna hai 
+        const supportedTypes = ["mp4","mkv"];
+        const fileType = file.name.split(".")[1].toLowerCase();
+        console.log(fileType);
+
+        // add a uppar limit of 5mb for video file
+        const fileSizeInMB = file.size / (1024 * 1024);
+        if(fileSizeInMB > 10){
+            return res.status(400).json({
+                success: false,
+                message: "File size should be less than 10MB"
+            })
+        }
+        if(!isFileTypeSupported(fileType, supportedTypes)){
+            return res.status(400).json({
+                success: false,
+                message: "File type not supported"
+            })
+        }
+
+        // file format supported hai
+        const response = await uploadFileToCloudinary(file, "codehelp");
+        console.log(response);
+
+        // db ke aandar entry save karni hai 
+        const fileDta = await File.create({
+            name,
+            imageUrl: response.secure_url,
+            tags,
+            email
+        })
+        res.json({
+            success: true,
+            imageUrl: response.secure_url,
+            message: "Video uploaded successfully",
+        });
+
+    } catch (error) {
+        console.error("DEBUG ERROR: ", error);
+        res.status(400).json({
+        success: false,
+        message: "Something went wrong",
+       }) 
+    }
+}
+
+
+// image size reducer handler define yaha kar rahe hai
+exports.imageSizeReducer = async (req, res) => {
+    try {
+        // data fetch karna hai
+        const { name, tags, email } = req.body;
+        console.log(name, tags, email);
+
+        // file fetch karna hai 
+        const file = req.files.imageFile;
+        console.log(file);
+
+        // validation check karna hai
+        const supportedTypes = ["jpg","jpeg","png"];
+        const fileType = file.name.split(".")[1].toLowerCase();
+
+        if(!isFileTypeSupported(fileType, supportedTypes)){
+            return res.status(400).json({
+                success: false,
+                message: "File type not supported"
+            });
+        }
+
+        // file format supported hai 
+        const response = await uploadFileToCloudinary(file, "codehelp",30);
+        console.log(response);
+
+        // db ke aandar entry save karni hia 
+        const fileData = await File.create({
+            name,
+            imageUrl: response.secure_url,
+            tags,
+            email
+        })
+
+        res.json({
+            success: true,
+            imageUrl: response.secure_url,
+            message: "Image uploaded successfully",
+        });  
+    } catch (error) {
+        
+    }
+}
