@@ -38,13 +38,59 @@ exports.auth = async (req, res, next) => {
 
 
 // isStudent
-
+exports.isStudent = async (req , res, next) => {
+    try {
+        if(req.user.accountType !== "Student"){
+            return res.status(401).json({
+                success: false,
+                message: "This is a protected route for students only",
+            })
+        }
+        next();
+    } catch (error) {
+        return res.status(401).json({
+            success: false,
+            message: "Something went wrong while validating the token",
+        })
+    }
+}
 
 
 
 // isInstructor
-
+exports.isInstructor = async (req , res, next) => {
+    try {
+        if(req.user.accountType !== "Instructor"){
+            return res.status(401).json({
+                success: false,
+                message: "This is a protected route for instructors only",
+            })
+        }
+        next();
+    } catch (error) {
+        return res.status(401).json({
+            success: false,
+            message: "Something went wrong while validating the token",
+        })
+    }
+}
 
 
 
 // isAdmin
+exports.isAdmin = async (req , res, next) => {
+    try {
+        if(req.user.accountType !== "Admin"){
+            return res.status(401).json({
+                success: false,
+                message: "This is a protected route for admins only",
+            })
+        }
+        next();
+    } catch (error) {
+        return res.status(401).json({
+            success: false,
+            message: "Something went wrong while validating the token",
+        })
+    }
+}
