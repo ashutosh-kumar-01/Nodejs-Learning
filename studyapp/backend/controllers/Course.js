@@ -90,3 +90,29 @@ exports.createCourse = async (req , res) => {
 }
 
 // get all courses handler function
+
+exports.getAllCourses = async (req , res) => {
+    try {
+        const allCourses = await Course.find({}, {courseName: true,
+                                                  price: true,
+                                                  thumbnail: true,
+                                                  instructor: true,
+                                                  ratingAndReviews: true,
+                                                  studentsEnrolled: true,
+
+        }).populate("instructor").exec();
+
+        return res.status(200).json({
+            sucess: true,
+            message: "Data for all courses fetched successfully",
+            data: allCourses,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            sucess: false,
+            message: "Cannot Fetch Courses data",
+            error: error.message,
+        })
+    }
+}
