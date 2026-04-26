@@ -1,5 +1,5 @@
 const Course = require('../models/Course');
-const Tag = require('../models/Tags');
+const Tag = require('../models/Category');
 const User = require('../models/User');
 
 require("dotenv").config();
@@ -17,7 +17,7 @@ exports.createCourse = async (req , res) => {
 
         // validation 
         if(!courseName || !courseDescription || !whatYouWillLearn || !price || !tag || !thumbnail){
-            return res.status(400).jason({
+            return res.status(400).json({
                 sucess: false,
                 message: "All fields are required",
             });
