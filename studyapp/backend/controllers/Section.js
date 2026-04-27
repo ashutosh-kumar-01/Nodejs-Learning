@@ -42,3 +42,62 @@ exports.createSection = async (req , res)=>{
     }
 }
 
+
+// update section
+exports.updateSection = async (req , res) => {
+    try {
+        // data input
+        const {sectionName, sectionId} = req.body;
+        // data validation
+        if(!sectionName || !sectionId){
+            return res.status(400).json({
+                sucess: false,
+                message: "Missing Properties",
+            });
+        }
+        // update section
+        const section = await Section.findByIdAndUpdate(
+            sectionId,
+            {sectionName},
+            {new: true}
+        );
+        // return res
+        return res.status(200).json({
+            sucess: true,
+            message: "Section updated successfully",
+            section,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            sucess: false,
+            message: "Unable to update section, please try again",
+            error: error.message,
+        });
+    }
+}
+
+
+
+
+// delete section
+exports.deleteSection = async (req , res) =>{
+    try {
+        // get id 
+        const {sectionId} = req.body;
+        // use findByIdAndDelete to delete the section
+        await Section.findByIdAndDelete(sectionId);
+        // do we need to remove the section objectId from the course collection as well? 
+        // Yes, we need to remove the section objectId from the course collection as well. We can use the $pull operator to remove the section objectId from the course collection.
+        // return res
+        return res.status(200).json({
+            sucess: true,
+            message: "Section deleted successfully",
+        });
+    } catch (error) {
+        return res.status(500).json({
+            sucess: false,
+            message: "Unable to delete section, please try again",
+            error: error.message,
+        });
+    }
+}
