@@ -91,7 +91,25 @@ exports.verifySignature = async (req , res) => {
     const shasum = crypto.createHmac("sha256", webhookSecret);
     shasum.update(JSON.stringify(req.body));
     const digest = shasum.digest("hex");
+
+    if(signature === digest){
+        console.log("Payment is Authorised");
+
+        const {courseId, userId} = req.body.payload.payment.entity.notes;
+
+        try {
+            // fullfill the action 
+
+            // find the courses and enroll the student in it
+            const enrolledCourse = await Course.findOneAndUpdate(
+                {_id: courseId},
+                {$push: {studentsEnrolled: userId}},
+                {new: true}
+            );
+        } catch (error) {
+            
+        }
+    }
     
 };
  
-// ..............
