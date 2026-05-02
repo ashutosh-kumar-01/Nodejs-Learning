@@ -106,10 +106,47 @@ exports.verifySignature = async (req , res) => {
                 {$push: {studentsEnrolled: userId}},
                 {new: true}
             );
+            if(!enrolledCourse){
+                return res.status(500).json({
+                    success: false,
+                    message: "Course not found"
+                });
+            }
+            console.log(enrolledCourse);
+
+            // find the student and add the course to their list enrolled courses me
+            const enrolledStudent = await User.findOneAndUpdate(
+                {_id: userId},
+                {$push: {courses: courseId}},
+                {new: true},
+            );
+            console.log(enrolledStudent);
+
+            // email send karo confirmation wala
+            const emailResponse = await mailSender(
+                enrolledStudent.email,
+                "Congratulations! You have successfully enrolled in the course.",
+            );
+            console.log(emailResponse);
+            return res.status(200).json({
+                success: true,
+                message: "Signature verified and course enrollment successful",
+            });
         } catch (error) {
-            
+            console.log(error);
+            return res.status(500).json({
+                success: false,
+                message: "Internal Server Error"
+            });
         }
+    } 
+    else{
+        return res.status(400).json({
+            success: false,
+            message: "Invalid signature",
+        });
     }
-    
 };
  
+
+

@@ -5,6 +5,7 @@ const User = require('../models/User');
 require("dotenv").config();
 
 const {uploadImageToCloudinary} = require('../utils/imageUploader');
+const { populate } = require('dotenv');
 
 // create course handler function
 exports.createCourse = async (req , res) => {
@@ -113,6 +114,57 @@ exports.getAllCourses = async (req , res) => {
             sucess: false,
             message: "Cannot Fetch Courses data",
             error: error.message,
-        })
+        });
+    }
+}
+
+
+// getcourse details handler function
+
+exports.getCourseDetails = async(req ,res) => {
+    try {
+        // get id
+        const {courseId} = req.body;
+        // find course details
+        const courseDetails = await Course.find(
+            {_id: courseId})
+            .populate(
+                {
+                    path: "instructor",
+                    populate:{
+                        path:"additionalDetails",
+                    },
+                }
+            )
+            .populate("category")
+            .populate("ratingAndReviews")
+                .populate({
+                    path: "courseContent",
+                    populate: {
+                        path : "subSection",
+                    },
+                })
+                .exec();
+           
+        // validation
+        if(!courseDetails){
+            return res.status(400).json({
+                sucess: false,
+                message: `Could not find the course with id ${courseId}`,
+            });
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            message: "Course details fetched successfully",
+            data: courseDetails,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({   
+            sucess: false,
+            message: "Failed to fetch course details",
+            error: error.message,
+        }); 
     }
 }
