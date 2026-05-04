@@ -1,4 +1,5 @@
-import mailSender from '../utils/mailSender';
+const mailSender = require('../utils/mailSender');
+const { emailVerificationTemplate } = require('../mail/templetes/emailVerificationEmail');
 
 const mongoose = require('mongoose');
 
@@ -13,7 +14,7 @@ const OTPSchema = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now(),
+        default: Date.now,
         expires: 300, // OTP will expire after 5 minutes (300 seconds)
     },
 });
@@ -22,17 +23,19 @@ const OTPSchema = new mongoose.Schema({
 // a function -> to send emails 
 async function sendVerificationEmail(email, otp) {
     try {
-        const mailResponse = await mailSender(email, "Verification Email from StudyApp", `Your OTP for email verification is: ${otp}. It will expire in 5 minutes.`);
+        const mailResponse = await mailSender(
+            email,
+            "Verify your email - StudyApp",
+            emailVerificationTemplate(otp)
+        );
         console.log("Mail sent successfully: ", mailResponse);
     } catch (error) {
         console.log("Error occured while sending mails: ",error);
-        throw error;
     }
 }
 
-OTPSchema.pre("save", async function(next){
+OTPSchema.pre("save", async function(){
     await sendVerificationEmail(this.email, this.otp);
-        next();
 });
 
 

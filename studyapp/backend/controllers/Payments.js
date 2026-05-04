@@ -1,9 +1,11 @@
-const {instance} = require("../config/razorpay");
+const { instance } = require("../config/razorpay");
+const mongoose = require("mongoose");
+const crypto = require("crypto");
 const Course = require("../models/Course");
 const User = require("../models/User");
-const mailSender = require("../utils/MailSender");
+const mailSender = require("../utils/mailSender");
 
-const {courseEnrollmentEmail} = require("../mail/templates/courseEnrollmentEmail");
+const { courseEnrollmentEmail } = require("../mail/templetes/courseEnrollmentEmail");
 
 // capture the payment and intiate the Razorpay order
 exports.capturePayment = async (req , res) => {
@@ -125,7 +127,8 @@ exports.verifySignature = async (req , res) => {
             // email send karo confirmation wala
             const emailResponse = await mailSender(
                 enrolledStudent.email,
-                "Congratulations! You have successfully enrolled in the course.",
+                "Course Enrollment Confirmation",
+                courseEnrollmentEmail(enrolledCourse.courseName, enrolledStudent.firstName || "Student"),
             );
             console.log(emailResponse);
             return res.status(200).json({

@@ -3,75 +3,112 @@ exports.emailVerificationTemplate = (otp) => {
     <html>
     <head>
         <meta charset="UTF-8">
-        <title>OTP Verification Email</title>
+        <title>Verify Your Email - StudyApp</title>
         <style>
             body {
-                background-color: #f4f4f4;
-                font-family: Arial, sans-serif;
+                background-color: #f2f5f9;
+                font-family: "Segoe UI", Arial, sans-serif;
                 font-size: 16px;
-                line-height: 1.4;
-                color: #333333;
+                line-height: 1.6;
+                color: #1f2937;
                 margin: 0;
                 padding: 0;
             }
             .container {
-                max-width: 600px;
+                max-width: 620px;
                 margin: 0 auto;
-                padding: 20px;
-                text-align: center;
+                padding: 24px;
             }
-            .message {
-                font-size: 24px;
-                font-weight: bold;
-                margin-bottom: 20px;
-                color: #333;
-            }
-            .body {
-                font-size: 16px;
-                margin-bottom: 20px;
+            .card {
                 background-color: #ffffff;
-                padding: 30px;
-                border-radius: 8px;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-                text-align: left;
+                border-radius: 16px;
+                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+                overflow: hidden;
             }
-            .highlight {
-                font-weight: bold;
-                color: #007bff;
+            .header {
+                background: linear-gradient(135deg, #0f172a 0%, #2563eb 50%, #22c55e 100%);
+                color: #ffffff;
+                padding: 28px 32px;
             }
-            .otp-container {
+            .brand {
+                font-size: 18px;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                opacity: 0.9;
+            }
+            .title {
+                margin: 8px 0 0;
+                font-size: 26px;
+                font-weight: 700;
+            }
+            .content {
+                padding: 28px 32px 32px;
+            }
+            .lead {
+                font-size: 17px;
+                color: #334155;
+                margin: 0 0 16px;
+            }
+            .otp-wrap {
+                background: #f8fafc;
+                border: 1px dashed #cbd5f5;
+                padding: 18px;
+                border-radius: 12px;
                 text-align: center;
-                margin: 30px 0;
+                margin: 18px 0 22px;
             }
             .otp {
-                font-size: 32px;
-                font-weight: bold;
-                letter-spacing: 6px;
-                color: #007bff;
-                background: #f0f7ff;
-                padding: 15px 30px;
-                border-radius: 8px;
-                display: inline-block;
+                font-size: 34px;
+                font-weight: 700;
+                letter-spacing: 8px;
+                color: #1d4ed8;
             }
-            .support {
-                font-size: 14px;
-                color: #999999;
-                margin-top: 20px;
+            .meta {
+                font-size: 13px;
+                color: #64748b;
+                margin-top: 10px;
+            }
+            .cta {
+                display: inline-block;
+                padding: 12px 18px;
+                background: #0f172a;
+                color: #ffffff;
+                text-decoration: none;
+                border-radius: 10px;
+                font-weight: 600;
+            }
+            .footer {
+                text-align: center;
+                font-size: 13px;
+                color: #94a3b8;
+                padding: 18px 24px 26px;
+            }
+            .footer a {
+                color: #2563eb;
+                text-decoration: none;
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <div class="message">Verify Your Email Address</div>
-            <div class="body">
-                <p>Hello,</p>
-                <p>Thank you for signing up with us! To complete your registration and verify your email address, please use the following One-Time Password (OTP):</p>
-                <div class="otp-container">
-                    <span class="otp">${otp}</span>
+            <div class="card">
+                <div class="header">
+                    <div class="brand">StudyApp</div>
+                    <div class="title">Verify your email</div>
                 </div>
-                <p>This OTP is valid for the next 5 minutes. If you did not request this verification, please disregard this email.</p>
+                <div class="content">
+                    <p class="lead">Use this One-Time Password to finish creating your account.</p>
+                    <div class="otp-wrap">
+                        <div class="otp">${otp}</div>
+                        <div class="meta">Valid for 5 minutes</div>
+                    </div>
+                    <p>If you did not request this code, you can safely ignore this email.</p>
+                    <a class="cta" href="#">Open StudyApp</a>
+                </div>
+                <div class="footer">
+                    Need help? Email <a href="mailto:info@studyapp.com">info@studyapp.com</a>
+                </div>
             </div>
-            <div class="support">If you have any questions or need assistance, please feel free to reach out to us at <a href="mailto:info@studyapp.com">info@studyapp.com</a>.</div>
         </div>
     </body>
     </html>`;

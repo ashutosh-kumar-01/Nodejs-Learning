@@ -1,4 +1,4 @@
-const Tag = require('../models/Tags');
+const Category = require('../models/Category');
 
 // create tag ka handler function 
 
@@ -14,7 +14,7 @@ exports.createCategory = async (req , res) => {
             });
         }
         // create entry in database
-        const tagDetails = await Tag.create({
+        const tagDetails = await Category.create({
             name: name,
             description: description,
         });
@@ -37,7 +37,7 @@ exports.createCategory = async (req , res) => {
 
 exports.showAllCategories = async (req , res) => {
     try {
-        const allTags = await Tag.find({},{name:true, description:true});
+        const allTags = await Category.find({},{name:true, description:true});
         return res.status(200).json({
             success: true,
             message: "All tags return successfully",
@@ -59,7 +59,7 @@ exports.categoryPageDetails = async (req, res) =>{
         const {categoryId} = req.body;
 
         // get courses for the specified category
-        const selectedCategory = await Tag.findById(categoryId).populate("courses").exec();
+        const selectedCategory = await Category.findById(categoryId).populate("courses").exec();
         console.log(selectedCategory);
 
         // handle the case when the category is not found
@@ -83,7 +83,7 @@ exports.categoryPageDetails = async (req, res) =>{
         const  selectedCourses = selectedCategory.courses;
 
         // get courses for other categories
-        const categoriesExceptSelected = await categoryId.find({
+        const categoriesExceptSelected = await Category.find({
             _id: { $ne: categoryId }, 
         }).populate("courses");
 

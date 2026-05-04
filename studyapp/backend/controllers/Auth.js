@@ -1,6 +1,7 @@
 // import necessary modules and models
 const User = require("../models/User");
 const OTP = require("../models/OTP");
+const Profile = require("../models/Profile");
 const otpGenerator = require("otp-generator");  
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -12,13 +13,20 @@ exports.sendOTP = async (req, res) => {
   try {
 
     // fetch email from request body
-    const { email } = req.body;
+    const { email } = req.body || {};
 
     // check if user already exists
     const checkUserPresent = await User.findOne({ email });
 
     // if user already exists, then return a respose
-    if (checkUserPresent) {
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: "Email is required",
+            });
+        }
+
+        if (checkUserPresent) {
       return res.status(400).json({
         success: false,
         message: "User already exists with this email",
@@ -55,10 +63,11 @@ exports.sendOTP = async (req, res) => {
     console.log("OTP saved in database:", otpBody);
 
     // return response success
-    return res.status(200).json({
-      success: true,
-      message: "OTP sent successfully",
-    });
+        return res.status(200).json({
+            success: true,
+            message: "OTP sent successfully",
+            otp,
+        });
 
 
   } catch (error) {
@@ -116,12 +125,12 @@ exports.signup = async (req, res) => {
         
         // find most recent otp form the user
 
-        const recentOtp = await OTP.findOne({email}).sort({createdAt: -1}).limt(1);
+        const recentOtp = await OTP.findOne({ email }).sort({ createdAt: -1 });
         console.log(recentOtp);
 
         // validate otp
 
-        if(!recentOtp.length == 0){
+        if(!recentOtp){
             // otp not found
             return res.status(400).json({
                 success: false,
@@ -143,11 +152,11 @@ exports.signup = async (req, res) => {
 
         // create user in database
 
-        const profileDetails = await Profiler.create({
+        const profileDetails = await Profile.create({
             gender: null,
             dateOfBirth: null,
             about:null,
-            contactNumber:Number,
+            contactNumber: contactNumber || null,
 
         });
 

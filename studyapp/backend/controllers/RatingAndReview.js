@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const RatingAndReview = require("../models/RatingAndReview");
 const Course = require("../models/Course");
 
@@ -9,10 +10,10 @@ exports.createRating = async (req , res) => {
         // get user id
         const userId = req.user.id;
         // fetchdata form user
-        const {rating, review, CourseId} = req.body;
+        const {rating, review, courseId} = req.body;
         // check if user is enrolled or not
         const courseDetails = await Course.findOne(
-            {id:courseId, studentsEnrolled: {$elemMatch: {$eq: userId}}});
+            {_id: courseId, studentsEnrolled: {$elemMatch: {$eq: userId}}});
 
         if(!courseDetails){
             return res.status(400).json({
@@ -35,14 +36,14 @@ exports.createRating = async (req , res) => {
         // create rating and review
         const ratingReview = await RatingAndReview.create({
             rating, review,
-            course: CourseId,
+            course: courseId,
             user: userId,
         });
         // update the course with new rating
-        const updatedCourseDetails = await Course.findByIdAndUpdate({_id: CourseId}, 
+        const updatedCourseDetails = await Course.findByIdAndUpdate({_id: courseId}, 
             {
                 $push: {
-                    RatingAndReviews: ratingReview._id,
+                    ratingAndReviews: ratingReview._id,
                 }
             },
             {new: true}

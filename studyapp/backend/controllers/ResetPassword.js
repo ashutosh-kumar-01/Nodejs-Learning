@@ -59,7 +59,7 @@ exports.resetPassword = async (req , res) => {
             });
         }
         // get userdetails from db using token
-        const userDetails = await User.findOne({token: token});
+        const userDetails = await User.findOne({ resetPasswordToken: token });
         // if no entry - invalid token
         if(!userDetails){
             return res.status(400).json({
@@ -79,7 +79,7 @@ exports.resetPassword = async (req , res) => {
         // password update
 
         await User.findOneAndUpdate(
-            { token: token },
+            { resetPasswordToken: token },
             { password: hashedPassword },
             { new: true }
         );

@@ -1,8 +1,15 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("Hello");
-});
+const {
+	updateProfile,
+	deleteAccount,
+	getAllUserDetails,
+} = require("../controllers/Profile");
+const { auth } = require("../middlewares/auth");
 
-module.exports = router; 
+router.put("/update", auth, updateProfile);
+router.delete("/delete", auth, deleteAccount);
+router.get("/me", auth, getAllUserDetails);
+
+module.exports = router;
