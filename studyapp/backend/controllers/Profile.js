@@ -1,6 +1,8 @@
 const Profile = require('../models/Profile');
 const User = require('../models/User');
 const Course = require('../models/Course');
+const { uploadImageToCloudinary } = require('../utils/imageUploader');
+require('dotenv').config();
 
 exports.updateProfile = async (req, res) => {
     try {
@@ -116,6 +118,44 @@ exports.getAllUserDetails = async (req , res) => {
         return res.status(500).json({
             success: false,
             message: "Error while fetching user details",
+            error: error.message,
+        });
+    }
+}
+
+// update display picture
+exports.updateDisplayPicture = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const displayPicture = req.files && req.files.displayPicture;
+
+        if (!displayPicture) {
+            return res.status(400).json({
+                success: false,
+                message: "Display picture is required",
+            });
+        }
+
+        const image = await uploadImageToCloudinary(
+            displayPicture,
+            process.env.FOLDER_NAME
+        );
+
+        const updatedUser = await User.findByIdAndUpdate(
+            { _id: userId },
+            { image: image.secure_url },
+            { new: true }
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Image Updated successfully",
+            data: updatedUser,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Error while updating display picture",
             error: error.message,
         });
     }

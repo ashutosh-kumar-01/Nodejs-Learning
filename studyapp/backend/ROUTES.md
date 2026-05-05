@@ -10,14 +10,15 @@ All JSON routes require header: Content-Type: application/json
 2. POST /auth/signup
 3. POST /auth/login
 4. PUT /profile/update
-5. GET /profile/me
-6. POST /courses/category (Admin only)
-7. POST /courses/course (Instructor only)
-8. POST /courses/section (Instructor only)
-9. POST /courses/subsection (Instructor only)
-10. POST /courses/rating (Student only)
-11. POST /payments/capture (Student only)
-12. POST /payments/verify
+5. PUT /profile/updateDisplayPicture
+6. GET /profile/me
+7. POST /courses/category (Admin only)
+8. POST /courses/course (Instructor only)
+9. POST /courses/section (Instructor only)
+10. POST /courses/subsection (Instructor only)
+11. POST /courses/rating (Student only)
+12. POST /payments/capture (Student only)
+13. POST /payments/verify
 
 ## Auth (/auth)
 
@@ -90,6 +91,12 @@ All JSON routes require header: Content-Type: application/json
       "contactNumber": "9999999999",
       "gender": "Male"
     }
+
+- PUT /profile/updateDisplayPicture
+  - Purpose: Update user profile picture.
+  - Auth: Cookie token or Authorization: Bearer <token>
+  - Body (form-data):
+    - displayPicture: <image file>
 
 - DELETE /profile/delete
   - Purpose: Delete user account.

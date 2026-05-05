@@ -55,6 +55,8 @@ const userSchema = new mongoose.Schema({
             ref: "CourseProgress",
         }
     ],
+}, {
+    timestamps: true,
 });  
 
 
