@@ -21,8 +21,8 @@ exports.resetPasswordToken = async (req , res) => {
         // update user by adding token and expiration time
         user.updatedDetails = await User.findOneAndUpdate(
             { email: email },
-            { resetPasswordToken: token, resetPasswordExpires: Date.now() + 30000}, // 5 minutes
-            { new: true }
+            { resetPasswordToken: token, resetPasswordExpires: Date.now() + 5 * 60 * 1000 },
+            { returnDocument: "after" }
         );
         // create url 
         const url = `http://localhost:3000/update-password/${token}`
@@ -68,7 +68,7 @@ exports.resetPassword = async (req , res) => {
             });
         }
         // token time check
-        if(userDetails.resetPasswordExpires < Date.now()){
+        if (userDetails.resetPasswordExpires < Date.now()) {
             return res.status(400).json({
                 success: false,
                 message: "Token has expired",
@@ -81,7 +81,7 @@ exports.resetPassword = async (req , res) => {
         await User.findOneAndUpdate(
             { resetPasswordToken: token },
             { password: hashedPassword },
-            { new: true }
+            { returnDocument: "after" }
         );
         // response
         return res.status(200).json({

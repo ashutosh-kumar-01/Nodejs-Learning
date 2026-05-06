@@ -12,6 +12,6 @@ const { auth } = require("../middlewares/auth");
 router.put("/update", auth, updateProfile);
 router.put("/updateDisplayPicture", auth, updateDisplayPicture);
 router.delete("/delete", auth, deleteAccount);
-router.get("/me", auth, getAllUserDetails);
+router.get("/getUserDetails", auth, getAllUserDetails);
 
 module.exports = router;

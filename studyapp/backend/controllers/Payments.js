@@ -104,9 +104,9 @@ exports.verifySignature = async (req , res) => {
 
             // find the courses and enroll the student in it
             const enrolledCourse = await Course.findOneAndUpdate(
-                {_id: courseId},
-                {$push: {studentsEnrolled: userId}},
-                {new: true}
+                { _id: courseId },
+                { $push: { studentsEnrolled: userId } },
+                { returnDocument: "after" }
             );
             if(!enrolledCourse){
                 return res.status(500).json({
@@ -118,9 +118,9 @@ exports.verifySignature = async (req , res) => {
 
             // find the student and add the course to their list enrolled courses me
             const enrolledStudent = await User.findOneAndUpdate(
-                {_id: userId},
-                {$push: {courses: courseId}},
-                {new: true},
+                { _id: userId },
+                { $push: { courses: courseId } },
+                { returnDocument: "after" }
             );
             console.log(enrolledStudent);
 

@@ -15,13 +15,13 @@ exports.createCourse = async (req , res) => {
         const categoryId = category || tag;
 
         // get thumbnail
-        const thumbnail = req.files.thumbnailImage;
+        const thumbnail = req.files?.thumbnailImage;
 
         // validation 
-        if(!courseName || !courseDescription || !whatYouWillLearn || !price || !categoryId || !thumbnail){
+        if (!courseName || !courseDescription || !whatYouWillLearn || !price || !categoryId || !thumbnail) {
             return res.status(400).json({
                 sucess: false,
-                message: "All fields are required",
+                message: "All fields are required, including thumbnailImage",
             });
         }
 
